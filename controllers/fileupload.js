@@ -24,3 +24,14 @@ exports.localFile = async(req,res)=>{
         console.log(error); 
     }
 }
+//image upload handler 
+exports.imageUpload = async (req,res)=>{
+    try{
+        //data fetch
+        const {name , tags , email} = req.body;
+        console.log(name , tags ,email);
+        const file = req.files.imageFile
+    } catch(error){
+
+    }
+}
