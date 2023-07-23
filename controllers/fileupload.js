@@ -1,5 +1,5 @@
 const File = require("../models/File");
-
+const cloudinary = require("cloudinary").v2
 //Localfile upload -> Handler Function
 
 exports.localFile = async(req,res)=>{
@@ -30,6 +30,12 @@ function isSupportedTypes(type , supportedTypes)
 {
     return supportedTypes.includes(type);
 }
+async function uploadFiletoCloudinary(file,folder){
+    const options = {folder}
+   console.log("temp File Path ->",file.tempFilePath)
+   return await cloudinary.uploader.upload(file.tempFilePath ,options)
+}
+
 exports.imageUpload = async (req,res)=>{
     try{
         //data fetch
@@ -39,13 +45,35 @@ exports.imageUpload = async (req,res)=>{
 
         const file = req.files.imageFile;
          console.log(file);
-        //Validation
+
+        //V alidation
         const supportedTypes = ['jpeg' , 'jpg' , 'png'];
         const fileType =  file.name.split('.')[1].toLowerCase();
+        console.log(fileType);
+        if(!isSupportedTypes(fileType,supportedTypes))
+        {
+            return res.status(400).json({
+                success:false,
+                message:"File Format not Supported",
+            })
+        }
+        //File Format Supported hai
+        console.log("Uploading to CloudMedia");
+        const response = await uploadFiletoCloudinary(file,"CloudMedia");
+        console.log(response)
 
+        //Db mei entry save
 
+        return res.json({
+            success:true,
+            message:"Image Successfully Uploaded"
+        })
 
     } catch(error){
-
+        console.log(error);
+        return res.status(400).json({
+            success:false,
+            message:"Something went wrong",
+        })
     }
 }
