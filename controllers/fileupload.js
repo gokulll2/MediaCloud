@@ -25,12 +25,26 @@ exports.localFile = async(req,res)=>{
     }
 }
 //image upload handler 
+
+function isSupportedTypes(type , supportedTypes)
+{
+    return supportedTypes.includes(type);
+}
 exports.imageUpload = async (req,res)=>{
     try{
         //data fetch
         const {name , tags , email} = req.body;
+
         console.log(name , tags ,email);
-        const file = req.files.imageFile
+
+        const file = req.files.imageFile;
+         console.log(file);
+        //Validation
+        const supportedTypes = ['jpeg' , 'jpg' , 'png'];
+        const fileType =  file.name.split('.')[1].toLowerCase();
+
+
+
     } catch(error){
 
     }
